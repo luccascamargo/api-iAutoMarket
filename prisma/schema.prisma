@@ -1,18 +1,106 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model Users {
+  id                String          @unique @default(uuid())
+  customer_id       String
+  name              String
+  email             String          @unique
+  phone             String?
+  stripe_product_id Plan            @default(DEFAULT)
+  subscriptions     Subscriptions[]
+
+  adverts Adverts[]
+
+  @@map("user")
 }
 
-model Todo {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  text      String
-  completed Boolean
+model Subscriptions {
+  id                   String   @unique @default(uuid())
+  status               Boolean
+  subscription_id      String?
+  customer_id          String
+  user                 Users?   @relation(fields: [user_id], references: [id])
+  user_id              String?
+  stripe_product_id    String?
+  updated_at           DateTime @default(now()) @db.Timestamp(6)
+  created_at           DateTime @default(now()) @db.Timestamp(6)
+  current_period_start DateTime
+  current_period_end   DateTime
+
+  @@map("subscriptions")
+}
+
+model Adverts {
+  id               String    @id @default(uuid())
+  type             String
+  type_value       String
+  board            String
+  board_value      String
+  model            String
+  model_value      String
+  year_model       Int
+  year_model_value String
+  color            String
+  cep              String
+  city             String
+  state            String
+  price            Int
+  doors            String
+  mileage          Int
+  description      String
+  plate            String
+  transmission     String
+  created_at       DateTime  @default(now()) @db.Timestamp(6)
+  updated_at       DateTime? @default(now()) @db.Timestamp(6)
+  condition        Condition @default(REQUESTED)
+
+  photos    Photos[]
+  optionals Optional[]
+  Users     Users?     @relation(fields: [user_id], references: [id])
+  user_id   String?
+
+  @@map("adverts")
+}
+
+model Optional {
+  id   String @id @unique @default(uuid())
+  name String @unique
+
+  adverts Adverts[]
+
+  @@map("optional")
+}
+
+model Photos {
+  id         String   @id @default(uuid())
+  field_name String
+  uri        String
+  version_id String
+  advert_id  String
+  Adverts    Adverts? @relation(fields: [advert_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("photos")
+}
+
+enum Condition {
+  ACTIVE
+  INACTIVE
+  REQUESTED
+}
+
+enum Plan {
+  DEFAULT
+  SILVER
+  GOLD
+  PLATINUM
 }

@@ -5,6 +5,8 @@ import { router } from "./routes";
 
 const app = express();
 
+const port = process.env.PORT || 3000;
+
 const allowedOrigins = [
   "capacitor://localhost",
   "ionic://localhost",
@@ -39,6 +41,6 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 app.use(cors());
 app.use(router);
 
-app.listen(3333, () =>
-  console.log("Server is running http://localhost:3333/ 🚀 ")
-);
+app.listen(Number(port), "0.0.0.0", () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});

@@ -343,7 +343,7 @@ router.post(
         console.log(`Eventos nao ouvidos ${event.type}`);
     }
 
-    return res.json({ message: "ok" });
+    return res.status(200);
   }
 );
 

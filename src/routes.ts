@@ -155,7 +155,7 @@ router.post("/create-customer", async (req, res) => {
 });
 
 router.post(
-  "/webhook-stripe",
+  "/stripe_webhooks",
   raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
     const signature = req.headers["stripe-signature"];

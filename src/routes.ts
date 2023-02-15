@@ -22,7 +22,7 @@ const stripe = new Stripe(
   }
 );
 
-const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET || "";
+const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET as string;
 
 export const router = Router();
 
@@ -212,8 +212,6 @@ router.post(
         });
 
         if (subscription) {
-          console.log("caiu no update");
-
           //update
           await prisma.subscriptions.update({
             where: {
@@ -341,9 +339,10 @@ router.post(
         break;
       default:
         console.log(`Eventos nao ouvidos ${event.type}`);
+        return res.status(200);
     }
 
-    return res.status(200);
+    return res.status(200).send();
   }
 );
 

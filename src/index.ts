@@ -15,6 +15,6 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 });
 app.use(router);
 
-app.listen(Number(port), "0.0.0.0", () => {
+app.listen(Number(port), () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
